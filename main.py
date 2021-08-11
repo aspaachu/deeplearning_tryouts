@@ -6,15 +6,14 @@ from tensorflow.keras.layers import GlobalMaxPooling2D, MaxPooling2D
 from tensorflow.keras.layers import BatchNormalization
 from tensorflow.keras.models import Model
 cifar10 = tf.keras.datasets.cifar10
-# Display the version
+
 print(tf.__version__)
 
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
-# Reduce pixel values
+
 x_train, x_test = x_train / 255.0, x_test / 255.0
 
-# flatten the label values
 y_train, y_test = y_train.flatten(), y_test.flatten()
 fig, ax = plt.subplots(5, 5)
 k = 0
@@ -29,12 +28,8 @@ k = 0
 # number of classes
 K = len(set(y_train))
 
-# calculate total numer of classes
-# for output layer
 print("number of classes:", K)
 
-# Build the model using the functional API
-# input layer
 i = Input(shape=x_train[0].shape)
 x = Conv2D(32, (3, 3), activation='relu', padding='same')(i)
 x = BatchNormalization()(x)
@@ -78,10 +73,7 @@ model.compile(optimizer='adam',
 # Fit
 r = model.fit(
 x_train, y_train, validation_data=(x_test, y_test), epochs=1)
-# Fit with data augmentation
-# Note: if you run this AFTER calling
-# the previous model.fit()
-# it will CONTINUE training where it left off
+
 batch_size = 32
 data_generator = tf.keras.preprocessing.image.ImageDataGenerator(
 width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
@@ -104,11 +96,9 @@ plt.imshow(x_test[image_number])
 # load the image in an array
 n = np.array(x_test[image_number])
 
-# reshape it
+# reshape 
 p = n.reshape(1, 32, 32, 3)
 
-# pass in the network for prediction and
-# save the predicted label
 predicted_label = labels[model.predict(p).argmax()]
 
 # load the original label
